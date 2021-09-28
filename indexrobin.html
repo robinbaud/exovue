@@ -8,12 +8,16 @@
 </head>
 <body>
     <div id="app">
-        <button @click:v-bind=home>home</button>
-        
-        <pare-brise></pare-brise>
-        <baie></baie>
-        <dome></dome>
-        <end></end>
+        <button @click="choose('home')" v-if="actualPage !== 'home'">home</button>
+        <home v-if="actualPage == 'home'"></home>
+        <button @click="choose('pare-brise')" v-if="actualPage !== 'pare-brise'">pare-brise</button>
+        <pare-brise v-if="actualPage == 'pare-brise'"></pare-brise>
+        <button @click="choose('baie')" v-if="actualPage !== 'baie'">baie</button>
+        <baie v-if="actualPage == 'baie'"></baie>
+        <button @click="choose('dome')" v-if="actualPage !== 'dome'">dome</button>
+        <dome v-if="actualPage == 'dome'"></dome>
+        <button @click="choose('end')" v-if="actualPage !== 'end'">end</button>
+        <end v-if="actualPage == 'end'"></end>
 
     </div>
     <script>
@@ -37,11 +41,14 @@
             
 
             data: {
-
+                actualPage: 'home',
             },
 
             methods: {
-
+                choose: function(pageChoosen){
+                    this.actualPage = pageChoosen;
+                    console.log(pageChoosen)
+                }
             },
 
             computed: {
