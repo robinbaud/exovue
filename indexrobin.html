@@ -38,15 +38,15 @@
       </nav>
     </header>
     <home v-if="actualPage == 'home'"></home>
-    <ul v-for="element in getResponse[1]">
+    <ul v-for="element in getAlltriptyque[1]">
       <li>{{element.field}}</li>
     </ul>
-    <button @click="getElements(getResponse[0])"></button>
+    <button @click="getElements(getAlltriptyque[0])"></button>
     <div v-if="actualPage !== 'home'">
       <div class="container">
         <div class="row">
           <div class="col-8">
-            <pare-brise v-if="actualPage == 'pare-brise'"></pare-brise>
+            <pare-brise v-if="actualPage == 'pare-brise'" :data="getAlltriptyque"> </pare-brise>
             <baie v-if="actualPage == 'baie'"></baie>
             <dome v-if="actualPage == 'dome'"></dome>
           </div>
@@ -85,11 +85,15 @@
 <!-- Vue.JS  -->
  
  <script>
+
         // Accueil //
+
+
     Vue.component('home', {
       model: {
         event: 'pare-brise'
       },
+
       template: `<div class="container">
     <div class="row">
       <div class="col-4">
@@ -120,11 +124,13 @@
       </div>
     </div>
   </div>`,
-  methods: {
-    choose: function(pageChoosen){
-      this.$parent.choose(pageChoosen)
-    } 
-  }
+
+
+      methods: {
+        choose: function(pageChoosen){
+          this.$parent.choose(pageChoosen)
+        } 
+      }
     }),
 
     /* Les pages a affiché.  https://vuejs.org/v2/api/#parent */
@@ -135,23 +141,36 @@
         // Le choix du modéles //
 
     Vue.component('pare-brise', {
+
+      /* c'est un problème a 15h51 C'est ça qui fait qu'on reste sur la pages pare-brise.*/
+   
+      props:[
+
+         "data"
+      ],
+
       template: 
       `<div class="container">
           <div class="row row-cols-2">
+            <div v-for="volets in data[0].data" class="col">
+              {{volets.fields.images.image}}
+
+              </div>
+
             <div class="col">
               <img src="" alt="">
               </div>
+
             <div class="col">
               <img src="" alt="">
               </div>
-            <div class="col">
-              <img src="" alt="">
-              </div>
+
             <div class="col">
               <img src="" alt="">
               </div>
           </div>
       </div>`,
+
       methods: {
         get: function(choosen) {
           console.log('bonsoir')
@@ -159,6 +178,7 @@
         }
       },
       created: function(){
+
         console.log('salut')
       }
     }),
@@ -172,16 +192,20 @@
     const vue = new Vue({
       el: "#app",
       
-      /* */
+      /* API */
       
       data: {
         actualPage: 'home',
         buttons: ['pare-brise', 'baie', 'dome'],
         url: 'https://nouvelair-preprod.rouen-webmaster.com/wp-json/nouvelair/api/',
-        getResponse: [],
-        getData: []
+        getAlltriptyque:[],
+        getPricebais: [],
+        getAlldome:[],
+        getData: [],
 
       },
+          /* Je cherhcer a afficher mes reponse avec le filters :: ma source https://fr.vuejs.org/v2/cookbook/using-axios-to-consume-apis.html*/
+
 
       methods: {
         choose: function (pageChoosen) {
@@ -190,6 +214,8 @@
 
         },
         
+        //get Elements c'est pour charger toute la liste.
+
         getElements: function(Elementchoosen){
           console.log('hi')
           for(i = 0 ; i < Elementchoosen.length ; i++){
@@ -200,34 +226,40 @@
           }
         }
         
-        
       },
-
+        // Les listes son applé ici. 
+      /* Ici j'appelle mon getAlltriptyque.*/
       created: function(arg){
           console.log('coucou')
           axios.get(this.url + 'alltriptyque')
             .then(response => {
               if (response.status == 200){
                 console.log(response);
-                this.getResponse.push(response);
+                this.getAlltriptyque.push(response);
               }
-            })
+            }),
+
+            // Il faut faire le tris response avec les response.
+            /*Ici c"est getPricebais*/
             axios.get(this.url + 'pricebaie')
             .then(response => {
               if (response.status == 200){
                 console.log(response);
-                this.getResponse.push(response);
+                this.getPricebais.push(response);
               }
-            })
+            }),
+                /* Ici c'est Alldome */
             axios.get(this.url + 'alldome')
             .then(response => {
               if (response.status == 200){
                 console.log(response);
-                this.getResponse.push(response);
+                this.getAlldome.push(response);
                 console.log(this.getResponse)
               }
             })
       },
+
+      //fini de listes
 
       computed: {
          
