@@ -56,14 +56,34 @@ body{
 }
 /* pages Volets triptique de pare-brise*/
 .integral{
-    margin: 29px;
+    margin: -41px;
     margin-top: 83px;
     background-color: white;
     height: 290px;
     padding: 30px;
     border-radius: 0.9rem;
-    transition: 0.5s;
+    transition: 0.5s
 }
+
+.profile{
+
+    margin: -41px;
+    margin-top: 83px;
+    background-color: white;
+    height: 290px;
+    padding: 30px;
+    border-radius: 0.9rem;
+    transition: 0.5s
+
+}
+
+@media (min-width: 1400px){
+.container, .container-lg, .container-md, .container-sm, .container-xl {
+    max-width: 1785px
+}
+
+
+
 
 .btn-outline-warning, .pare-brise {
     position: relative;
@@ -81,19 +101,6 @@ body{
 .boutondubas{
     text-align: center;
 }
-.selection .btn{
-    width: 40%;
-}
-.selectiondeux {
-    width: 50%;
-}
 
-.terminer .btn{
-    width: 80%;
-}
-
-.none{
-    display: none;
-}
 
 /* position-absolute top-50 start-50 translate-middle */
