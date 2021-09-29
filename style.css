@@ -54,7 +54,13 @@ body{
     font-size: 20px;
     color: rgb(0, 179, 0);
 }
+
+@media (min-width: 1400px){
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1785px
+    }
 /* pages Volets triptique de pare-brise*/
+
 .integral{
     margin: 29px;
     margin-top: 83px;
@@ -94,6 +100,10 @@ body{
 
 .none{
     display: none;
+}
+
+ul li button{
+    display: inline-block;
 }
 
 /* position-absolute top-50 start-50 translate-middle */

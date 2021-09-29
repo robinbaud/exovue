@@ -118,7 +118,7 @@
   }
     }),
 
-    /* Les pages a affiché.  https://vuejs.org/v2/api/#parent */
+    /* Les pages a affiché.   */
 
     Vue.component('end', {
       template: `<h1>bonjour</h1>`
@@ -135,11 +135,9 @@
               </div>
             </div> 
             
-            <br>
-
             <div class="col">
               <div class="profile">
-              <img src="/images/profile.jpg"class="img-fluid" alt="Responsive image">
+              <img src="/images/profile.jpg" class="img-fluid" alt="Responsive image">
               </div>
             </div>
 
@@ -173,6 +171,13 @@
         choose: function (pageChoosen) {
           this.actualPage = pageChoosen;
           console.log(pageChoosen)
+
+        },
+        
+        get: function(){
+          axios.get('https://nouvelair-preprod.rouen-webmaster.com/wp-json/nouvelair/api/alltriptyque', {
+            
+          })
         }
       },
 
