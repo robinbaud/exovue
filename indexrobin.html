@@ -14,13 +14,7 @@
     <title>Devis</title>
   </head>
   <!--- https://nouvelair-preprod.rouen-webmaster.com/wp-json/nouvelair/api/alltriptyque-->
-        
-  <style>
-     .display{
-       display: none;
-     }
-  </style>
-  
+
   <body>
     <div id="app">
       <header>
@@ -31,7 +25,8 @@
               href="#"
               @click="choose('home')"
               v-if="actualPage !== 'home'"
-              >Accueil</a>
+              >Accueil</a
+            >
 
             <button
               class="navbar-toggler"
@@ -44,11 +39,20 @@
             >
               <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav" v-for="button in buttons">
-                <li class="nav-item">
-                                  <!---les buttons-->
-                <a class="nav-link" @click="choose(button)">Voir les {{button}}</a>
+              <ul
+                class="navbar-nav"
+                v-if="actualPage !== 'home'"
+                v-for="button in buttonsfilter"
+              >
+                <li v-if="actualPage !== button.name" class="nav-item">
+                  <!---les buttons-->
+                  <a
+                    class="nav-link"
+                    @click="choose(button.name); deletebutton(button);"
+                    >Voir les {{button.name}}</a
+                  >
                 </li>
               </ul>
             </div>
@@ -56,7 +60,7 @@
         </nav>
       </header>
       <home v-if="actualPage == 'home'"></home>
-          
+
       <!---La liste commence ici-->
       <div v-if="actualPage !== 'home'">
         <div id="ici" class="container">
@@ -73,19 +77,18 @@
             </div>
             <div class="col-4 row recap">
               <h2>recapitulatif de ma commande</h2>
-              <p v-if="CampingCarModel !== ''">
+              <p v-if="CampingCarModel !== '' ">
                 volet triptyque de part brise = {{CampingCarModel}}
               </p>
               <div class="col-12" v-for="(donnée, index) in filter">
                 baie {{index + 1}} = {{donnée.longueur}} X {{donnée.hauteur}} cm
               </div>
-              <p v-if="counterDome!==0">volets de dome X {{counterDome}}</p>
-              <p v-if="counterLanterneaux!==0">
-              volets de lanterneaux X {{counterLanterneaux}}
+              <p v-if="counterDome!==0 ">volets de dome X {{counterDome}}</p>
+              <p v-if="counterLanterneaux!==0 ">
+                volets de lanterneaux X {{counterLanterneaux}}
               </p>
               <p>{{returnskyDome}}</p>
             </div>
-            
           </div>
         </div>
 
@@ -133,7 +136,7 @@
     </div>
   </div>`,
 
-        // C’est pour changer les pages.
+        // C’est pour changer les pages home.
         methods: {
           choose: function (pageChoosen) {
             this.$parent.choose(pageChoosen);
@@ -247,7 +250,11 @@
         /* API */
         data: {
           actualPage: "home",
-          buttons: ["pare-brise", "baie", "dome"],
+          buttons: [
+            { used: false, name: "pare-brise" },
+            { used: false, name: "baie" },
+            { used: false, name: "dome" },
+          ],
           url: "https://nouvelair-preprod.rouen-webmaster.com/wp-json/nouvelair/api/",
           getAlltriptyque: [],
           getPricebais: [],
@@ -258,19 +265,37 @@
           returnskyDome: "",
           listHauteur: [],
           CampingCarModel: "",
-          isUsed: "display"
+          Buttontodelete: [],
         },
 
         //methods change la variable qui determine quel composant s'affiche
         methods: {
           choose: function (pageChoosen) {
             this.actualPage = pageChoosen;
-            isUsed
+            for (i = 0; i < this.buttons.length; i++) {
+              if (this.actualPage == this.buttons[i].name) {
+                this.buttons[i].used = true;
+              }
+            }
+            if (this.actualPage == "home") {
+              for (j = 0; j < this.buttons.length; j++) {
+                this.buttons[j].used = false;
+              }
+              this.CampingCarModel = "";
+              this.listHauteur = [];
+              this.counterDome = 0;
+              this.counterLanterneaux = 0;
+              this.skyDome = false;
+              this.returnskyDome = "";
+            }
+
             console.log(pageChoosen);
+          },
+          deletebutton: function (button) {
+            button.used = true;
           },
         },
 
-        
         // Les listes son applé ici.
         /* Ici j'appelle mon getAlltriptyque.*/
         created: function (arg) {
@@ -312,6 +337,11 @@
               (listHauteur) =>
                 listHauteur.hauteur !== "" && listHauteur.longueur !== ""
             );
+          },
+
+          // le filtre du button//
+          buttonsfilter: function () {
+            return this.buttons.filter((buttons) => buttons.used !== true);
           },
         },
       });
