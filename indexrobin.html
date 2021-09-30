@@ -1,97 +1,108 @@
 <!DOCTYPE html>
 <html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.4/axios.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <title>Devis</title>
+  </head>
+  <!--- https://nouvelair-preprod.rouen-webmaster.com/wp-json/nouvelair/api/alltriptyque-->
+        
+  <style>
+     .display{
+       display: none;
+     }
+  </style>
+  
+  <body>
+    <div id="app">
+      <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="container-fluid">
+            <a
+              class="navbar-brand"
+              href="#"
+              @click="choose('home')"
+              v-if="actualPage !== 'home'"
+              >Accueil</a>
 
-<head>
-  <meta charset="UTF-8">
-  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.4/axios.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-  <link rel="stylesheet" href="style.css">
-  <title>cest-la-</title>
-</head>
-<!--- https://nouvelair-preprod.rouen-webmaster.com/wp-json/nouvelair/api/alltriptyque-->
-
-<body>
-  <div id="app">
-    <header>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#" @click="choose('home')" v-if="actualPage !== 'home'">Accueil</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav" v-for="button in buttons">
-              <li class="nav-item">
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNav"
+              aria-controls="navbarNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav" v-for="button in buttons">
+                <li class="nav-item">
+                                  <!---les buttons-->
                 <a class="nav-link" @click="choose(button)">Voir les {{button}}</a>
-              </li>
-            </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <home v-if="actualPage == 'home'"></home>
+          
+      <!---La liste commence ici-->
+      <div v-if="actualPage !== 'home'">
+        <div id="ici" class="container">
+          <div class="row">
+            <div class="col-8">
+              <pare-brise
+                v-if="actualPage == 'pare-brise'"
+                :data="getAlltriptyque"
+              >
+              </pare-brise>
+
+              <baie v-if="actualPage == 'baie'" :test="getPricebais"></baie>
+              <dome v-if="actualPage == 'dome'" :yolo="getAlldome"></dome>
+            </div>
+            <div class="col-4 row recap">
+              <h2>recapitulatif de ma commande</h2>
+              <p v-if="CampingCarModel !== ''">
+                volet triptyque de part brise = {{CampingCarModel}}
+              </p>
+              <div class="col-12" v-for="(donnée, index) in filter">
+                baie {{index + 1}} = {{donnée.longueur}} X {{donnée.hauteur}} cm
+              </div>
+              <p v-if="counterDome!==0">volets de dome X {{counterDome}}</p>
+              <p v-if="counterLanterneaux!==0">
+              volets de lanterneaux X {{counterLanterneaux}}
+              </p>
+              <p>{{returnskyDome}}</p>
+            </div>
+            
           </div>
         </div>
-      </nav>
-    </header>
-    <home v-if="actualPage == 'home'"></home>
-    <!---La liste commence ici-->
-    <div v-if="actualPage !== 'home'">
-      <div id="ici" class="container">
 
-        <div class="row">
-          <div class="col-8">
-            <pare-brise v-if="actualPage == 'pare-brise'" :data="getAlltriptyque"> </pare-brise>
-            <baie v-if="actualPage == 'baie'" :test="getPricebais"></baie>
-            <dome v-if="actualPage == 'dome'" :yolo="getAlldome"></dome>
-          </div>
-          <div class="col-4 row recap">
-            <h2>recapitulatif de ma commande</h2>
-            <p v-if="CampingCarModel !== ''">volet triptyque de part brise = {{CampingCarModel}}</p>
-            <p v-if="counterDome!==0">volets de dome X {{counterDome}}</p>
-            <p v-if="counterLanterneaux!==0">volets de lanterneaux X {{counterLanterneaux}}</p>
-            <p>{{returnskyDome}}</p>
-            <div class="col-12" v-for="(donnée, index) in filter">baie {{index + 1}} = {{donnée.longueur}} X
-              {{donnée.hauteur}} cm</div>
-
-          </div>
-        </div>
-
-
+        <end v-if="actualPage == 'end'"></end>
       </div>
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-8 boutondubas selection">
-            <ul class="list-group list-group-vertical row" v-for="button in buttons">
-              <li>
-                <button class="btn btn-outline-primary col-4">voir les {{button}}</button>
-              </li>
-            </ul>
-
-
-          </div>
-          <div class="col-4 boutondubas terminer">
-            <button type="button" class="btn btn-danger">voir les voir les </button>
-          </div>
-        </div>
-      </div>
-
-      <end v-if="actualPage == 'end'"></end>
+      <!-- et fini ici -->
     </div>
-    <!-- et fini ici -->
 
-  </div>
+    <!-- Vue.JS  -->
 
-  <!-- Vue.JS  -->
+    <script>
+      // Accueil //
 
-  <script>
+      Vue.component("home", {
+        model: {},
 
-    // Accueil //
-
-
-    Vue.component('home', {
-      model: {
-      },
-
-      template: `<div class="container">
+        template: `<div class="container">
     <div class="row">
       <div class="col-4">
         <div class="choice">
@@ -121,28 +132,24 @@
       </div>
     </div>
   </div>`,
-      
-  // C’est pour changer les pages.
-      methods: {
-        choose: function (pageChoosen) {
-          this.$parent.choose(pageChoosen)
-        }
-      }
-    }),
 
-      /* Les pages a affiché.  https://vuejs.org/v2/api/#parent */
-
-      Vue.component('end', {
-        template: `<h1>bonjour</h1>`
+        // C’est pour changer les pages.
+        methods: {
+          choose: function (pageChoosen) {
+            this.$parent.choose(pageChoosen);
+          },
+        },
       }),
-      // Le choix du modéles //
+        /* Les pages a affiché.  https://vuejs.org/v2/api/#parent */
 
-      Vue.component('pare-brise', {
-        props: [
-          "data"
-        ],
-        template:
-          `<div class="container">
+        Vue.component("end", {
+          template: `<h1>bonjour</h1>`,
+        }),
+        // Le choix du modéles //
+
+        Vue.component("pare-brise", {
+          props: ["data"],
+          template: `<div class="container">
           <div class="row row-cols-2">
             <div  @click="voletType(index)" style=" width: 300px; height: 200px;background-color: white; border-radius: 30px; color: green" v-for="(volets, index) in data[0].data"  class="col">
               <img style="width: 200px"  v-if="index !== 4" v-bind:src="volets.fields.images.image">
@@ -151,32 +158,28 @@
           </div>
       </div>`,
 
-        // pour choisir le modele ICI
+          // pour choisir le modele ICI
 
-        methods: {
-          voletType: function (index) {
-            if (index == 0) {
-              this.$parent._data.CampingCarModel = 'integral'
-            } else if (index == 1) {
-              this.$parent._data.CampingCarModel = 'Profilé'
-            } else if (index == 2) {
-              this.$parent._data.CampingCarModel = 'Capucine'
-            } else if (index == 3) {
-              this.$parent._data.CampingCarModel = 'Fourgons'
-            } else if (index == 4) {
-              this.$parent._data.CampingCarModel = 'Hors Gabarit'
-            }
-          }
-        }
-      }),
+          methods: {
+            voletType: function (index) {
+              if (index == 0) {
+                this.$parent._data.CampingCarModel = "integral";
+              } else if (index == 1) {
+                this.$parent._data.CampingCarModel = "Profilé";
+              } else if (index == 2) {
+                this.$parent._data.CampingCarModel = "Capucine";
+              } else if (index == 3) {
+                this.$parent._data.CampingCarModel = "Fourgons";
+              } else if (index == 4) {
+                this.$parent._data.CampingCarModel = "Hors Gabarit";
+              }
+            },
+          },
+        }),
+        Vue.component("baie", {
+          props: ["test"],
 
-      Vue.component('baie', {
-        props: [
-          "test",
-        ],
-
-        template:
-          `<div class="container">
+          template: `<div class="container">
           <div class="row">
             <div class="col-5">
               <img style="width: 100%; margin-top: 150px" v-bind:src="test[0].data.image">
@@ -190,28 +193,28 @@
                 </div>
             </div>
         </div>`,
-        //ça bloque les lettres sur les inputs de la page bais.// 
-        methods: {
-          isNumber: function (evt) {
-            evt = (evt) ? evt : window.event;
-            var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
-              evt.preventDefault();;
-            } else {
-              return true;
-            }
-          }
-        }
 
-      }),
+          //ça bloque les lettres sur les inputs de la page bais.//
+          methods: {
+            isNumber: function (evt) {
+              evt = evt ? evt : window.event;
+              var charCode = evt.which ? evt.which : evt.keyCode;
+              if (
+                charCode > 31 &&
+                (charCode < 48 || charCode > 57) &&
+                charCode !== 46
+              ) {
+                evt.preventDefault();
+              } else {
+                return true;
+              }
+            },
+          },
+        }),
+        Vue.component("dome", {
+          props: ["yolo"],
 
-      Vue.component('dome', {
-        props: [
-          "yolo",
-        ],
-
-        template:
-          `<div class="container">
+          template: `<div class="container">
           <div class="row row-cols-2">
             <div v-for="(dome, index) in yolo[0].data" class="col">
               <img v-on:click="increment(dome, index)" style="width: 200px" v-bind:src="dome.fields.images.image">
@@ -219,108 +222,99 @@
           </div>
       </div>`,
 
-        //conteur pour les volets de dôme.
+          //conteur pour les volets de dôme.
 
-        methods: {
-          increment: function (dome, index) {
-            console.log(index)
-            if (index == 0) {
-              this.$parent._data.counterDome++;
-            }
-            else if (index == 1) {
-              this.$parent._data.counterLanterneaux++;
-            }
-            else if (index == 2) {
-              this.$parent._data.skyDome = true
-              if (this.$parent._data.skyDome == true) {
-                this.$parent._data.returnskyDome = "volet de SkyDôme"
+          methods: {
+            increment: function (dome, index) {
+              console.log(index);
+              if (index == 0) {
+                this.$parent._data.counterDome++;
+              } else if (index == 1) {
+                this.$parent._data.counterLanterneaux++;
+              } else if (index == 2) {
+                this.$parent._data.skyDome = true;
+                if (this.$parent._data.skyDome == true) {
+                  this.$parent._data.returnskyDome = "volet de SkyDôme";
+                }
               }
-            }
+            },
+          },
+        });
+      //il fini ici
+      const vue = new Vue({
+        el: "#app",
 
-          }
+        /* API */
+        data: {
+          actualPage: "home",
+          buttons: ["pare-brise", "baie", "dome"],
+          url: "https://nouvelair-preprod.rouen-webmaster.com/wp-json/nouvelair/api/",
+          getAlltriptyque: [],
+          getPricebais: [],
+          getAlldome: [],
+          counterDome: 0,
+          counterLanterneaux: 0,
+          skyDome: false,
+          returnskyDome: "",
+          listHauteur: [],
+          CampingCarModel: "",
+          isUsed: "display"
         },
 
-
-      })
-    //il fini ici
-    const vue = new Vue({
-      el: "#app",
-
-      /* API */
-      data: {
-
-        actualPage: 'home',
-        buttons: ['pare-brise', 'baie', 'dome'],
-        url: 'https://nouvelair-preprod.rouen-webmaster.com/wp-json/nouvelair/api/',
-        getAlltriptyque: [],
-        getPricebais: [],
-        getAlldome: [],
-        counterDome: 0,
-        counterLanterneaux: 0,
-        skyDome: false,
-        returnskyDome: "",
-        listHauteur: [],
-        CampingCarModel: '',
-
-      },
-
-      /* Je cherhcer a afficher mes reponse avec le filters :: ma source https://fr.vuejs.org/v2/cookbook/using-axios-to-consume-apis.html*/
-
-      //methods change la variable qui determine quel composant s'affiche
-      methods: {
-        choose: function (pageChoosen) {
-          this.actualPage = pageChoosen;
-          console.log(pageChoosen)
+        //methods change la variable qui determine quel composant s'affiche
+        methods: {
+          choose: function (pageChoosen) {
+            this.actualPage = pageChoosen;
+            isUsed
+            console.log(pageChoosen);
+          },
         },
 
-      },
-      // Les listes son applé ici. 
-      /* Ici j'appelle mon getAlltriptyque.*/
-      created: function (arg) {
-        axios.get(this.url + 'alltriptyque')
-          .then(response => {
+        
+        // Les listes son applé ici.
+        /* Ici j'appelle mon getAlltriptyque.*/
+        created: function (arg) {
+          axios.get(this.url + "alltriptyque").then((response) => {
             if (response.status == 200) {
               console.log(response);
               this.getAlltriptyque.push(response);
             }
           }),
-
-          // Il faut faire le tris response avec les response.
-          /*Ici c"est getPricebais*/
-          axios.get(this.url + 'pricebaie')
-            .then(response => {
+            // Il faut faire le tris response avec les response.
+            /*Ici c"est getPricebais*/
+            axios.get(this.url + "pricebaie").then((response) => {
               if (response.status == 200) {
                 console.log(response);
                 this.getPricebais.push(response);
               }
             }),
-          /* Ici c'est Alldome */
-          axios.get(this.url + 'alldome')
-            .then(response => {
+            /* Ici c'est Alldome */
+            axios.get(this.url + "alldome").then((response) => {
               if (response.status == 200) {
                 console.log(response);
                 this.getAlldome.push(response);
-                console.log(this.getResponse)
+                console.log(this.getResponse);
               }
-            })
-        //boucler sur les input pour en faire une liste
-        for (i = 0; i < 10; i++) {
-          this.listHauteur.push({
-            hauteur: '',
-            longueur: ''
-          })
-        }
-      },
+            });
+          //boucler sur les input pour en faire une liste
+          for (i = 0; i < 10; i++) {
+            this.listHauteur.push({
+              hauteur: "",
+              longueur: "",
+            });
+          }
+        },
 
-      //on filtre le recap des baie pour ne pas afficher les resultat null//
-      computed: {
-        filter: function () {
-          return this.listHauteur.filter(listHauteur => (listHauteur.hauteur !== '' && listHauteur.longueur !== ''))
-            ;
-        }
-      }
-    })
-  </script>
-</body>
-
+        //on filtre le recap des baie pour ne pas afficher les resultat null//
+        computed: {
+          filter: function () {
+            return this.listHauteur.filter(
+              (listHauteur) =>
+                listHauteur.hauteur !== "" && listHauteur.longueur !== ""
+            );
+          },
+        },
+      });
+    </script>
+  </body>
 </html>
