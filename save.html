@@ -136,14 +136,14 @@
     </div>
   </div>`,
 
-        // C’est pour changer les pages home.
+        // C’est pour changer les pages home.
         methods: {
           choose: function (pageChoosen) {
             this.$parent.choose(pageChoosen);
           },
         },
       }),
-        /* Les pages a affiché.  https://vuejs.org/v2/api/#parent */
+        /* Les pages a affiché.  https://vuejs.org/v2/api/#parent */
 
         Vue.component("end", {
           template: `<h1>bonjour</h1>`,
@@ -183,10 +183,10 @@
           props: ["test"],
 
           template: `<div class="container">
-              <div class="row">
-                <div class="col-5">
-                <img style="width: 100%; margin-top: 150px" v-bind:src="test[0].data.image">
-                </div>
+          <div class="row">
+            <div class="col-5">
+              <img style="width: 100%; margin-top: 150px" v-bind:src="test[0].data.image">
+              </div>
               <div class="col-7 row" >
                 <div class="col-12" v-for="inputs in this.$parent._data.listHauteur">
                   <p style="display: inline">L</p>
@@ -281,11 +281,8 @@
               for (j = 0; j < this.buttons.length; j++) {
                 this.buttons[j].used = false;
               }
-              for (s = 0; s < this.listHauteur.length; s++) {
-                this.listHauteur[s].hauteur = "";
-                this.listHauteur[s].longueur = "";
-              }
               this.CampingCarModel = "";
+              this.listHauteur = [];
               this.counterDome = 0;
               this.counterLanterneaux = 0;
               this.skyDome = false;
