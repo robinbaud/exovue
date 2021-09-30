@@ -4,13 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.4/axios.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-  <link rel="stylesheet" href="style2.css">
+  <link rel="stylesheet" href="style.css">
   <title>cest-la-</title>
 </head>
-
-
+<!--- https://nouvelair-preprod.rouen-webmaster.com/wp-json/nouvelair/api/alltriptyque-->
 
 <body>
   <div id="app">
@@ -39,47 +39,60 @@
       </nav>
     </header>
     <home v-if="actualPage == 'home'"></home>
+    <!---Recap-->
     <div v-if="actualPage !== 'home'">
-      <div class="container">
+      <div id="ici" class="container">
         <div class="row">
           <div class="col-8">
-            <pare-brise v-if="actualPage == 'pare-brise'"></pare-brise>
-            <baie v-if="actualPage == 'baie'"></baie>
-            <dome v-if="actualPage == 'dome'"></dome>
+            <pare-brise v-if="actualPage == 'pare-brise'" :data="getAlltriptyque"> </pare-brise>
+            <baie v-if="actualPage == 'baie'" :test="getPricebais"></baie>
+            <dome v-if="actualPage == 'dome'" :yolo="getAlldome"></dome>
           </div>
           <div class="col-4 recap">
             <h2>recapitulatif de ma commande</h2>
+            <p>volets de dome X {{counterDome}}</p>
+            <p>volets de lanterneaux X {{counterLanterneaux}}</p>
+            <p>{{returnskyDome}}</p>
           </div>
         </div>
+
+
+      </div>
+      <div class="container-fluid">
         <div class="row">
-          <div class="col-9 boutondubas selection">
-            <button type="button" class="btn btn-primary">voir les pare-brise</button>
-            <button type="button" class="btn btn-primary">voir les baie</button>
-            <button type="button" class="btn btn-primary">voir les voir les </button>
+          <div class="col-8 boutondubas selection">
+            <ul class="list-group list-group-vertical row" v-for="button in buttons">
+              <li>
+                <button class="btn btn-outline-primary col-4">voir les {{button}}</button>
+              </li>
+            </ul>
+
+
           </div>
-          <div class="col-3 boutondubas terminer">
+          <div class="col-4 boutondubas terminer">
             <button type="button" class="btn btn-danger">voir les voir les </button>
           </div>
         </div>
-        
-        
-        
       </div>
-      
+
       <end v-if="actualPage == 'end'"></end>
     </div>
-<!--  -->
+    <!--  -->
 
   </div>
-  
-<!-- Vue.JS  -->
- 
- <script>
-        // Accueil //
+
+  <!-- Vue.JS  -->
+
+  <script>
+
+    // Accueil //
+
+
     Vue.component('home', {
       model: {
         event: 'pare-brise'
       },
+
       template: `<div class="container">
     <div class="row">
       <div class="col-4">
@@ -87,10 +100,9 @@
           <img src="/images/volet.png" class="img-fluid" alt="Responsive image">
           <h2>Volets triptique de pare-brise</h2>
           <p>sélectionnez un volet tryptique de pare-brise en fonction de votre camping-car</p>
-          <button id="pare-brise" type="button" @click="choose('pare-brise')" class="btn btn-outline-warning bottom-10 start-50 translate-middle">Je souhaite un volet tryptique</button>
+          <button id="pare-brise" type="button" @click="choose('pare-brise') " class="btn btn-outline-warning bottom-10 start-50 translate-middle">Je souhaite un volet tryptique</button>
         </div>
       </div>
-    
 
       <div class="col-4">
         <div class="choice">
@@ -111,75 +123,176 @@
       </div>
     </div>
   </div>`,
-  methods: {
-    choose: function(pageChoosen){
-      this.$parent.choose(pageChoosen)
-    } 
-  }
+
+
+      methods: {
+        choose: function (pageChoosen) {
+          this.$parent.choose(pageChoosen)
+        }
+      }
     }),
 
-    /* Les pages a affiché.   */
+      /* Les pages a affiché.  https://vuejs.org/v2/api/#parent */
 
-    Vue.component('end', {
-      template: `<h1>bonjour</h1>`
-    }),
-        // Le choix du modéles //
+      Vue.component('end', {
+        template: `<h1>bonjour</h1>`
+      }),
+      // Le choix du modéles //
 
-    Vue.component('pare-brise', {
-      template: 
-      `<div class="container">
+      Vue.component('pare-brise', {
+        props: [
+          "data"
+        ],
+        template:
+          `<div class="container">
           <div class="row row-cols-2">
-            <div class="col">
-              <div class="integral">
-                <img src="/images/integral.jpg" class="img-fluid" alt="Responsive image">
-              </div>
-            </div> 
-            
-            <div class="col">
-              <div class="profile">
-              <img src="/images/profile.jpg" class="img-fluid" alt="Responsive image">
-              </div>
-            </div>
-
-            <div class="col">
-              <img src="" alt="">
-              </div>
-
-            <div class="col">
-              <img src="" alt="">
+            <div v-for="(volets, index) in data[0].data" v-if="index !== 4" class="col">
+              <img style="width: 200px" v-bind:src="volets.fields.images.image">
               </div>
           </div>
-      </div>`
-    }),
+      </div>`,  //https://divtec.gitbook.io/quasar/vue.js-listes-et-composants
+          //recape silte
+      methods: {
+        increment: function (dome, index) {
+            console.log(index)
+            if (index == 0){
+              this.$parent._data.counterDome ++;
+            }
+            else if(index == 1){
+              this.$parent._data.counterLanterneaux ++;
+            }
+            else if(index == 2){
+              this.$parent._data.skyDome = true
+              if(this.$parent._data.skyDome == true){
+                this.$parent._data.returnskyDome = "volet de SkyDôme"
+              }
+            }
+            
+          }
+      }
 
-    Vue.component('baie', {
-      template: `<h1>au revoir</h1>`
-    }),
-    Vue.component('dome', {
-      template: `<h1>rebonjour</h1>`
-    })
+      }),
+
+      Vue.component('baie', {
+        props: [
+          "test"
+        ],
+
+        template:
+          `<div class="container">
+          <div class="row">
+            <div class="col">
+              <img style="width: 400px; margin-left: 0" v-bind:src="test[0].data.image">
+              <a>{{pricebaie}}</a>
+              </div>
+            </div>
+        </div>`
+      }),
+
+      Vue.component('dome', {
+        props: [
+          "yolo",
+        ],
+
+        template:
+          `<div class="container">
+          <div class="row row-cols-2">
+            <div v-for="(dome, index) in yolo[0].data" class="col">
+              <img v-on:click="increment(dome, index)" style="width: 200px" v-bind:src="dome.fields.images.image">
+              </div>
+          </div>
+      </div>`,
+
+        //conteur pour les volets de dôme.
+
+        methods: {
+          increment: function (dome, index) {
+            console.log(index)
+            if (index == 0){
+              this.$parent._data.counterDome ++;
+            }
+            else if(index == 1){
+              this.$parent._data.counterLanterneaux ++;
+            }
+            else if(index == 2){
+              this.$parent._data.skyDome = true
+              if(this.$parent._data.skyDome == true){
+                this.$parent._data.returnskyDome = "volet de SkyDôme"
+              }
+            }
+            
+          }
+        },
+      
+
+      })
+      //il fini ici
     const vue = new Vue({
       el: "#app",
-      
-      /* */
-      
+
+      /* API */
       data: {
+
         actualPage: 'home',
+        buttons: ['pare-brise', 'baie', 'dome'],
+        url: 'https://nouvelair-preprod.rouen-webmaster.com/wp-json/nouvelair/api/',
+        getAlltriptyque: [],
+        getPricebais: [],
+        getAlldome: [],
+        counterDome: 0,
+        counterLanterneaux: 0,
+        skyDome: false,
+        returnskyDome: "",
+        
+
+
+
       },
+      /* Je cherhcer a afficher mes reponse avec le filters :: ma source https://fr.vuejs.org/v2/cookbook/using-axios-to-consume-apis.html*/
+
 
       methods: {
         choose: function (pageChoosen) {
           this.actualPage = pageChoosen;
           console.log(pageChoosen)
-
         },
-        
-        get: function(){
-          axios.get('https://nouvelair-preprod.rouen-webmaster.com/wp-json/nouvelair/api/alltriptyque', {
-            
-          })
-        }
+
+        //get Elements c'est pour charger toute la liste.
+
       },
+      // Les listes son applé ici. 
+      /* Ici j'appelle mon getAlltriptyque.*/
+      created: function (arg) {
+        console.log('coucou')
+        axios.get(this.url + 'alltriptyque')
+          .then(response => {
+            if (response.status == 200) {
+              console.log(response);
+              this.getAlltriptyque.push(response);
+            }
+          }),
+
+          // Il faut faire le tris response avec les response.
+          /*Ici c"est getPricebais*/
+          axios.get(this.url + 'pricebaie')
+            .then(response => {
+              if (response.status == 200) {
+                console.log(response);
+                this.getPricebais.push(response);
+              }
+            }),
+          /* Ici c'est Alldome */
+          axios.get(this.url + 'alldome')
+            .then(response => {
+              if (response.status == 200) {
+                console.log(response);
+                this.getAlldome.push(response);
+                console.log(this.getResponse)
+              }
+            })
+      },
+
+      //fini de listes
 
       computed: {
 

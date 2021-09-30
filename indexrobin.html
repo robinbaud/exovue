@@ -42,17 +42,20 @@
     <!---Recap-->
     <div v-if="actualPage !== 'home'">
       <div id="ici" class="container">
+
         <div class="row">
           <div class="col-8">
             <pare-brise v-if="actualPage == 'pare-brise'" :data="getAlltriptyque"> </pare-brise>
             <baie v-if="actualPage == 'baie'" :test="getPricebais"></baie>
             <dome v-if="actualPage == 'dome'" :yolo="getAlldome"></dome>
           </div>
-          <div class="col-4 recap">
+          <div class="col-4 row recap">
             <h2>recapitulatif de ma commande</h2>
             <p>volets de dome X {{counterDome}}</p>
             <p>volets de lanterneaux X {{counterLanterneaux}}</p>
             <p>{{returnskyDome}}</p>
+            <div class="col-6" v-for="hauteur in listHauteur">{{hauteur}}</div>
+            <div class="col-6" v-for="longueur in listLongueur">{{longueur}}</div>
           </div>
         </div>
 
@@ -151,7 +154,9 @@
               </div>
           </div>
       </div>`,
+
           //recape silte
+          
       methods: {
         increment: function (dome, index) {
             console.log(index)
@@ -175,19 +180,33 @@
 
       Vue.component('baie', {
         props: [
-          "test"
+          "test",
+          /*"listhauteur",
+          "listLongueur"*/
         ],
-
+                                                                                                                             
         template:
           `<div class="container">
           <div class="row">
-            <div class="col">
-              <img v-bind:src="test[0].data.image">
-              <a>{{pricebaie}}</a>
-              
+            <div class="col-5">
+              <img style="width: 100%; margin-top: 150px" v-bind:src="test[0].data.image">
               </div>
+              <div class="col-7 row">
+                <div class="col-12" id="1"><p style="display: inline">L</p><input v-model="this.$parent._data.listLongueur[this.$parents('div').attr('id')]" style="width: 150px; display: inline" type="text"><p style="display: inline">H</p><input style="width: 150px; display: inline" type="text"></div>
+                <div class="col-12" id="2"><p style="display: inline">L</p><input style="width: 150px; display: inline" type="text"><p style="display: inline">H</p><input  style="width: 150px; display: inline" type="text"></div>
+                <div class="col-12" id="3"><p style="display: inline">L</p><input style="width: 150px; display: inline" type="text"><p style="display: inline">H</p><input  style="width: 150px; display: inline" type="text"></div>
+                <div class="col-12" id="4"><p style="display: inline">L</p><input style="width: 150px; display: inline" type="text"><p style="display: inline">H</p><input  style="width: 150px; display:inline" type="text"></div>
+                <div class="col-12" id="5"><p style="display: inline">L</p><input style="width: 150px; display: inline" type="text"><p style="display: inline">H</p><input  style="width: 150px; display: inline" type="text"></div>
+                </div>
             </div>
-        </div>`
+        </div>`,
+
+        methods:{
+          livreur: function(id, value){
+            console.log('push');
+            this.$parent._data.listLongueur[id].push(value)
+          }
+        }
       }),
 
       Vue.component('dome', {
@@ -244,11 +263,11 @@
         counterLanterneaux: 0,
         skyDome: false,
         returnskyDome: "",
-        
-
-
+        listHauteur:[],
+        listLongueur:[],
 
       },
+
       /* Je cherhcer a afficher mes reponse avec le filters :: ma source https://fr.vuejs.org/v2/cookbook/using-axios-to-consume-apis.html*/
 
 
@@ -258,13 +277,14 @@
           console.log(pageChoosen)
         },
 
+
+
         //get Elements c'est pour charger toute la liste.
 
       },
       // Les listes son applé ici. 
       /* Ici j'appelle mon getAlltriptyque.*/
       created: function (arg) {
-        console.log('coucou')
         axios.get(this.url + 'alltriptyque')
           .then(response => {
             if (response.status == 200) {
