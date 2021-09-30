@@ -153,8 +153,8 @@
       `<div class="container">
           <div class="row row-cols-2">
             <div v-for="volets in data[0].data" class="col">
+              <img v-bind:src="volets.fields.images.image">
               {{volets.fields.images.image}}
-
               </div>
 
             <div class="col">
@@ -201,7 +201,7 @@
         getAlltriptyque:[],
         getPricebais: [],
         getAlldome:[],
-        getData: [],
+        
 
       },
           /* Je cherhcer a afficher mes reponse avec le filters :: ma source https://fr.vuejs.org/v2/cookbook/using-axios-to-consume-apis.html*/
@@ -215,16 +215,6 @@
         },
         
         //get Elements c'est pour charger toute la liste.
-
-        getElements: function(Elementchoosen){
-          console.log('hi')
-          for(i = 0 ; i < Elementchoosen.length ; i++){
-            console.log(Elementchoosen[i])
-            for(j = 0; j < Elementchoosen.field.length ; j++){
-              console.log(Elementchoosen.field[j])
-            }
-          }
-        }
         
       },
         // Les listes son applé ici. 
