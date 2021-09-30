@@ -23,15 +23,9 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav" v-for="button in buttons">
               <li class="nav-item">
-                <a class="nav-link" href="#">Features</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Pricing</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled">Disabled</a>
+                <a class="nav-link" @click="choose(button)">Voir les {{button}}</a>
               </li>
             </ul>
           </div>
@@ -51,6 +45,7 @@
           </div>
           <div class="col-4 row recap">
             <h2>recapitulatif de ma commande</h2>
+            <p v-if="CampingCarModel !== ''">volet triptyque de part brise = {{CampingCarModel}}</p>
             <p v-if="counterDome!==0">volets de dome X {{counterDome}}</p>
             <p v-if="counterLanterneaux!==0">volets de lanterneaux X {{counterLanterneaux}}</p>
             <p>{{returnskyDome}}</p>
@@ -126,8 +121,8 @@
       </div>
     </div>
   </div>`,
-
-
+      
+  // C’est pour changer les pages.
       methods: {
         choose: function (pageChoosen) {
           this.$parent.choose(pageChoosen)
@@ -149,34 +144,30 @@
         template:
           `<div class="container">
           <div class="row row-cols-2">
-            <div v-for="(volets, index) in data[0].data" v-if="index !== 4" class="col">
-              <img style="width: 200px" v-bind:src="volets.fields.images.image">
+            <div  @click="voletType(index)" style=" width: 300px; height: 200px;background-color: white; border-radius: 30px; color: green" v-for="(volets, index) in data[0].data"  class="col">
+              <img style="width: 200px"  v-if="index !== 4" v-bind:src="volets.fields.images.image">
+              <h2 >{{volets.fields.nom}}</h2>
               </div>
           </div>
       </div>`,
 
+        // pour choisir le modele ICI
 
-
-        //recape silte
         methods: {
-          increment: function (dome, index) {
-            console.log(index)
+          voletType: function (index) {
             if (index == 0) {
-              this.$parent._data.counterDome++;
+              this.$parent._data.CampingCarModel = 'integral'
+            } else if (index == 1) {
+              this.$parent._data.CampingCarModel = 'Profilé'
+            } else if (index == 2) {
+              this.$parent._data.CampingCarModel = 'Capucine'
+            } else if (index == 3) {
+              this.$parent._data.CampingCarModel = 'Fourgons'
+            } else if (index == 4) {
+              this.$parent._data.CampingCarModel = 'Hors Gabarit'
             }
-            else if (index == 1) {
-              this.$parent._data.counterLanterneaux++;
-            }
-            else if (index == 2) {
-              this.$parent._data.skyDome = true
-              if (this.$parent._data.skyDome == true) {
-                this.$parent._data.returnskyDome = "volet de SkyDôme"
-              }
-            }
-
           }
         }
-
       }),
 
       Vue.component('baie', {
@@ -269,6 +260,7 @@
         skyDome: false,
         returnskyDome: "",
         listHauteur: [],
+        CampingCarModel: '',
 
       },
 
@@ -311,8 +303,8 @@
                 console.log(this.getResponse)
               }
             })
-            //boucler sur les input pour en faire une liste
-          for (i = 0; i < 10; i++) {
+        //boucler sur les input pour en faire une liste
+        for (i = 0; i < 10; i++) {
           this.listHauteur.push({
             hauteur: '',
             longueur: ''
