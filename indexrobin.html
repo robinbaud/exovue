@@ -28,22 +28,10 @@
               >Accueil</a
             >
 
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarNav"
-              aria-controls="navbarNav"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span class="navbar-toggler-icon"></span>
-            </button>
-
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul
                 class="navbar-nav"
-                v-if="actualPage !== 'home'"
+                v-if="actualPage !== 'home' && actualPage !== 'formulaire'"
                 v-for="button in buttonsfilter"
               >
                 <li v-if="actualPage !== button.name" class="nav-item">
@@ -55,6 +43,14 @@
                   >
                 </li>
               </ul>
+              <div class="nav-item">
+                <a
+                  class="nav-link"
+                  v-if="actualPage !== 'home' && actualPage !== 'formulaire'"
+                  @click="choose('formulaire')"
+                  >terminer ma selection</a
+                >
+              </div>
             </div>
           </div>
         </nav>
@@ -74,28 +70,31 @@
 
               <baie v-if="actualPage == 'baie'" :test="getPricebais"></baie>
               <dome v-if="actualPage == 'dome'" :yolo="getAlldome"></dome>
+              <formulaire v-if="actualPage == 'formulaire'"></formulaire>
             </div>
+
+            <!----recap--->
+
             <div class="col-4 row recap">
-              <h2>recapitulatif de ma commande</h2>
-              <p v-if="CampingCarModel !== '' ">
-                volet triptyque de part brise = {{CampingCarModel}}
-              </p>
-              <div class="col-12" v-for="(donnée, index) in filter">
-                baie {{index + 1}} = {{donnée.longueur}} X {{donnée.hauteur}} cm
-              </div>
-              <p v-if="counterDome!==0 ">volets de dome X {{counterDome}}</p>
-              <p v-if="counterLanterneaux!==0 ">
-                volets de lanterneaux X {{counterLanterneaux}}
-              </p>
-              <p>{{returnskyDome}}</p>
+            <h2>recapitulatif de ma commande</h2>
+            <p v-if="CampingCarModel !== '' ">
+              volet triptyque de part brise = {{CampingCarModel}}
+            </p>
+            <div class="col-12" v-for="(donnée, index) in filter">
+              baie {{index + 1}} = {{donnée.longueur}} X {{donnée.hauteur}} cm
             </div>
+            <p v-if="counterDome!==0 ">volets de dome X {{counterDome}}</p>
+            <p v-if="counterLanterneaux!==0 ">
+              volets de lanterneaux X {{counterLanterneaux}}
+            </p>
+            <p>{{returnskyDome}}</p>
           </div>
         </div>
-
-        <end v-if="actualPage == 'end'"></end>
       </div>
+
       <!-- et fini ici -->
     </div>
+    <!-- <----------div app-->
 
     <!-- Vue.JS  -->
 
@@ -106,35 +105,35 @@
         model: {},
 
         template: `<div class="container">
-    <div class="row">
-      <div class="col-4">
-        <div class="choice">
-          <img src="/images/volet.png" class="img-fluid" alt="Responsive image">
-          <h2>Volets triptique de pare-brise</h2>
-          <p>sélectionnez un volet tryptique de pare-brise en fonction de votre camping-car</p>
-          <button id="pare-brise" type="button" @click="choose('pare-brise') " class="btn btn-outline-warning bottom-10 start-50 translate-middle">Je souhaite un volet tryptique</button>
-        </div>
-      </div>
+          <div class="row">
+            <div class="col-4">
+              <div class="choice">
+                <img src="/images/volet.png" class="img-fluid" alt="Responsive image">
+                <h2>Volets triptique de pare-brise</h2>
+                <p>sélectionnez un volet tryptique de pare-brise en fonction de votre camping-car</p>
+                <button id="pare-brise" type="button" @click="choose('pare-brise') " class="btn btn-outline-warning bottom-10 start-50 translate-middle">Je souhaite un volet tryptique</button>
+              </div>
+            </div>
 
-      <div class="col-4">
-        <div class="choice">
-          <img src="/images/voletsbaies.png" class="img-fluid" alt="Responsive image">
-          <h2>Volets de baie</h2>
-          <p>Sélectionnez les différentes dimensions de vos baie de votre camping-car</p>
-          <button id="baie" type="button" @click="choose('baie')" class="btn btn-outline-warning bottom-10 start-50 translate-middle translate-end">Je souhaite un volet de baie</button>
-        </div>
-      </div>
-      
-      <div class="col-4">
-        <div class="choice">
-          <img src="/images/voletsdomes.png" class="img-fluid" alt="Responsive image">
-          <h2>Volets de dômes</h2>
-          <p>renseignez les quantité des différents dômes, lanterneaux et skydôme de votre camping-car</p>
-          <button id="dome" type="button" @click="choose('dome')" class="btn btn-outline-warning bottom-10 start-50 translate-middle">Je souhaite un volet de dôme</button>
-        </div>
-      </div>
-    </div>
-  </div>`,
+            <div class="col-4">
+              <div class="choice">
+                <img src="/images/voletsbaies.png" class="img-fluid" alt="Responsive image">
+                <h2>Volets de baie</h2>
+                <p>Sélectionnez les différentes dimensions de vos baie de votre camping-car</p>
+                <button id="baie" type="button" @click="choose('baie')" class="btn btn-outline-warning bottom-10 start-50 translate-middle translate-end">Je souhaite un volet de baie</button>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="choice">
+                <img src="/images/voletsdomes.png" class="img-fluid" alt="Responsive image">
+                <h2>Volets de dômes</h2>
+                <p>renseignez les quantité des différents dômes, lanterneaux et skydôme de votre camping-car</p>
+                <button id="dome" type="button" @click="choose('dome')" class="btn btn-outline-warning bottom-10 start-50 translate-middle">Je souhaite un volet de dôme</button>
+              </div>
+            </div>
+          </div>
+        </div>`,
 
         // C’est pour changer les pages home.
         methods: {
@@ -145,21 +144,91 @@
       }),
         /* Les pages a affiché.  https://vuejs.org/v2/api/#parent */
 
-        Vue.component("end", {
-          template: `<h1>bonjour</h1>`,
+        /*Formulaire de fin de commande*/
+        Vue.component("formulaire", {
+          template: `<div><h1>Formulaire</h1>
+
+      <form class="row g-3 needs-validation" novalidate>
+        <div class="col-md-4">
+          <label for="validationCustom01" class="form-label">Nom*</label>
+          <input type="text" class="form-control" id="validationCustom01" value="" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <label for="validationCustom02" class="form-label">Prénom*</label>
+          <input type="text" class="form-control" id="validationCustom02" value="" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label for="validationCustomUsername" class="form-label">Email</label>
+          <div class="input-group has-validation">
+            <div class="form-floating mb-3">
+              <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+              <label for="floatingInput">Email address</label>
+            </div>
+            </div>
+          </div>
+
+        <div class="col-md-4">
+          <label for="validationCustom01" class="form-label">Marque de camping-car</label>
+          <input type="text" class="form-control" id="validationCustom01" value="" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label for="validationCustom02" class="form-label">Modèle du camping-car</label>
+          <input type="text" class="form-control" id="validationCustom02" value="" required>
+          <div class="valid-feedback">
+            Looks good!
+        </div>
+        </div>
+
+          <div class="col-md-4">
+          <label for="validationCustom01" class="form-label">Type du camping-car</label>
+          <select class="form-select" aria-label="Default select example">
+          <option v-if="this.$parent._data.CampingCarModel !== ''" selected>{{this.$parent._data.CampingCarModel}}</option>
+          <option selected>Open this select menu</option>
+          <option value="1">Intégral</option>
+          <option value="2">Capucine</option>
+          <option value="3">Profilé</option>
+          <option value="4">Fourgon</option>
+          </select>
+        <div class="valid-feedback">
+            Looks good!
+          </div>
+        </div>
+          <div class="form-flating">
+          <label for="phone">Veuillez saisir un numéro de téléphone:</label>
+            <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+          </div>
+        
+          <div class="form-floating">
+            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+            <label for="floatingTextarea">Comments</label>
+          </div>
+        </form>
+      </div>`,
         }),
         // Le choix du modéles //
 
         Vue.component("pare-brise", {
           props: ["data"],
           template: `<div class="container">
-          <div class="row row-cols-2">
-            <div  @click="voletType(index)" style=" width: 300px; height: 200px;background-color: white; border-radius: 30px; color: green" v-for="(volets, index) in data[0].data"  class="col">
-              <img style="width: 200px"  v-if="index !== 4" v-bind:src="volets.fields.images.image">
-              <h2 >{{volets.fields.nom}}</h2>
-              </div>
-          </div>
-      </div>`,
+                <div class="row row-cols-2">
+                  <div  @click="voletType(index)" style=" width: 300px; height: 200px;background-color: white; border-radius: 30px; color: green" v-for="(volets, index) in data[0].data"  class="col">
+                    <img style="width: 200px"  v-if="index !== 4" v-bind:src="volets.fields.images.image">
+                    <h2 >{{volets.fields.nom}}</h2>
+                    </div>
+                </div>
+            </div>`,
 
           // pour choisir le modele ICI
 
@@ -183,19 +252,20 @@
           props: ["test"],
 
           template: `<div class="container">
-              <div class="row">
-                <div class="col-5">
-                <img style="width: 100%; margin-top: 150px" v-bind:src="test[0].data.image">
-                </div>
-              <div class="col-7 row" >
-                <div class="col-12" v-for="inputs in this.$parent._data.listHauteur">
-                  <p style="display: inline">L</p>
-                  <input v-on:keypress="isNumber(event)" v-model="inputs.longueur" style="width: 150px; display: inline" type="text">
-                  <p style="display: inline">H</p>
-                  <input v-on:keypress="isNumber(event)" v-model="inputs.hauteur" style="width: 150px; display: inline" type="text"></div>
-                </div>
-            </div>
-        </div>`,
+                    <div class="row">
+                      <div class="col-5">
+                      <img style="width: 100%; margin-top: 150px" v-bind:src="test[0].data.image">
+                      </div>
+                    <div class="col-7 row" >
+                      <div class="col-12" v-for="inputs in this.$parent._data.listHauteur">
+                        <p style="display: inline">L</p>
+                        <input v-on:keypress="isNumber(event)" v-model="inputs.longueur" style="width: 150px; display: inline" type="text">
+                        <p style="display: inline">H</p>
+                        <input v-on:keypress="isNumber(event)" v-model="inputs.hauteur" style="width: 150px; display: inline" type="text"></div>
+                      </div>
+                      <button class="btn-warning" @click="push()">Ajouter une baie</button>
+                  </div>
+              </div>`,
 
           //ça bloque les lettres sur les inputs de la page bais.//
           methods: {
@@ -212,18 +282,25 @@
                 return true;
               }
             },
+            push: function () {
+              this.$parent._data.listHauteur.push({
+                hauteur: "",
+                longueur: "",
+              });
+              console.log(listHauteur);
+            },
           },
         }),
         Vue.component("dome", {
           props: ["yolo"],
 
           template: `<div class="container">
-          <div class="row row-cols-2">
-            <div v-for="(dome, index) in yolo[0].data" class="col">
-              <img v-on:click="increment(dome, index)" style="width: 200px" v-bind:src="dome.fields.images.image">
-              </div>
-          </div>
-      </div>`,
+                <div class="row row-cols-2">
+                  <div v-for="(dome, index) in yolo[0].data" class="col">
+                    <img v-on:click="increment(dome, index)" style="width: 200px" v-bind:src="dome.fields.images.image">
+                    </div>
+                </div>
+            </div>`,
 
           //conteur pour les volets de dôme.
 
@@ -251,10 +328,21 @@
         data: {
           actualPage: "home",
           buttons: [
-            { used: false, name: "pare-brise" },
-            { used: false, name: "baie" },
-            { used: false, name: "dome" },
+            {
+              used: false,
+              name: "pare-brise",
+            },
+            {
+              used: false,
+              name: "baie",
+            },
+            {
+              used: false,
+              name: "dome",
+            },
+            
           ],
+
           url: "https://nouvelair-preprod.rouen-webmaster.com/wp-json/nouvelair/api/",
           getAlltriptyque: [],
           getPricebais: [],
@@ -268,7 +356,7 @@
           Buttontodelete: [],
         },
 
-        //methods change la variable qui determine quel composant s'affiche
+        //methods change la variable qui determine quel composant s'affiche au niveau des buttons
         methods: {
           choose: function (pageChoosen) {
             this.actualPage = pageChoosen;
@@ -285,6 +373,7 @@
                 this.listHauteur[s].hauteur = "";
                 this.listHauteur[s].longueur = "";
               }
+              this.listHauteur.length = 10;
               this.CampingCarModel = "";
               this.counterDome = 0;
               this.counterLanterneaux = 0;
@@ -296,6 +385,9 @@
           },
           deletebutton: function (button) {
             button.used = true;
+          },
+          editmode: function () {
+            this.activeEdit = !this.activeEdit;
           },
         },
 
@@ -324,6 +416,7 @@
                 console.log(this.getResponse);
               }
             });
+
           //boucler sur les input pour en faire une liste
           for (i = 0; i < 10; i++) {
             this.listHauteur.push({
