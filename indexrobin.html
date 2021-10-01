@@ -4,29 +4,26 @@
     <meta charset="UTF-8" />
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.4/axios.js"></script>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
-      crossorigin="anonymous"
-    />
+      crossorigin="anonymous"/>
     <link rel="stylesheet" href="style.css" />
     <title>Devis</title>
   </head>
-  <!--- https://nouvelair-preprod.rouen-webmaster.com/wp-json/nouvelair/api/alltriptyque-->
 
   <body>
+    <!--- ON dépose la Vue ici -->
+
+    <!------>
     <div id="app">
       <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <div class="container-fluid">
-            <a
-              class="navbar-brand"
-              href="#"
+          <a  class="navbar-brand"
               @click="choose('home')"
               v-if="actualPage !== 'home'"
-              >Accueil</a
-            >
+              >Accueil</a>
 
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul
@@ -35,27 +32,24 @@
                 v-for="button in buttonsfilter"
               >
                 <li v-if="actualPage !== button.name" class="nav-item">
-
                   <!---les buttons-->
-                  <a
-                    class="nav-link"
+                <a class="nav-link"
                     @click="choose(button.name); deletebutton(button);"
-                    >Voir les {{button.name}}</a
-                  >
+                    >Voir les {{button.name}}</a>
+                              <!--- syntaxe Mustache --->
                 </li>
               </ul>
               <div class="nav-item">
-                <a
-                  class="nav-link"
+               <a class="nav-link"
                   v-if="actualPage !== 'home' && actualPage !== 'formulaire'"
                   @click="choose('formulaire')"
-                  >terminer ma selection</a>
-                  
+                  >terminer ma selection</a>  
               </div>
             </div>
           </div>
         </nav>
       </header>
+
       <home v-if="actualPage == 'home'"></home>
 
       <!---La liste commence ici-->
@@ -67,8 +61,8 @@
 
             <pare-brise
               v-if="actualPage == 'pare-brise'"
-              :data="getAlltriptyque"
-            > </pare-brise>
+              :data="getAlltriptyque"> 
+          </pare-brise>
 
             <baie v-if="actualPage == 'baie'" :test="getPricebais"></baie>
             <dome v-if="actualPage == 'dome'" :yolo="getAlldome"></dome>
@@ -82,7 +76,6 @@
             <p v-if="CampingCarModel !== '' ">
               volet triptyque de part brise = {{CampingCarModel}}
             </p>
-              //
             <div class="col-12" v-for="(donnée, index) in filter">
               baie {{index + 1}} = {{donnée.longueur}} X {{donnée.hauteur}} cm
             </div>
@@ -149,6 +142,7 @@
           },
         },
       }),
+
         /* Les pages a affiché.  https://vuejs.org/v2/api/#parent */
 
         /*Formulaire de fin de commande*/
@@ -224,6 +218,8 @@
             <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
             <label for="floatingTextarea">Comments</label>
           </div>
+
+          <button type="button" class="btn btn-primary"> le devis </button>
         </form>
 
       </div>`,
@@ -318,7 +314,6 @@
         Vue.component("dome", {
           props: ["yolo"],
           
-            //
           template: `<div class="container">
                 <div class="row row-cols-2">
                   <div v-for="(dome, index) in yolo[0].data" class="col">
@@ -353,6 +348,7 @@
 
         /* API */
 
+        // actual page par défaut 
         data: {
           
           actualPage: "home",
@@ -386,18 +382,17 @@
           skyDome: false,
           //
           returnskyDome: "",
-          //
+          // push des objets avec 2 attribut Hauteur Longueur
           listHauteur: [],
-          //
+          // Le type de pare brise que tu choisis
           CampingCarModel: '',
-          //
-          Buttontodelete: [],
-          //
+          // contient le type de pare brise pour le formulaire == campingcarmodel
           Selected: '',
         },
 
         //methods change la variable qui determine quel composant s'affiche au niveau des buttons
-
+         //choosen On lui passe en paramètre ce que tu veux afficher.
+         //
         methods: {
           choose: function (pageChoosen) {
             this.actualPage = pageChoosen;
@@ -406,7 +401,8 @@
                 this.buttons[i].used = true;
               }
             }
-            // Quand je quitte une page autre que home, je veux que tout s'efface. C'est le if.
+
+            // Quand je reviens sur home, je veux que tout les donnée s'efface.  C'est le if.
 
             if (this.actualPage == "home") {
 
@@ -418,7 +414,7 @@
                 this.listHauteur[s].hauteur = "";
                 this.listHauteur[s].longueur = "";
               }
-              
+              // 
               this.listHauteur.length = 10;
               this.CampingCarModel = '';
               this.counterDome = 0;
@@ -427,23 +423,20 @@
               this.returnskyDome = "";
               this.Selected= '';
             }
-
             console.log(pageChoosen);
           },
+
             //
           deletebutton: function (button) {
             button.used = true;
           },
-            //
-          editmode: function () {
-            this.activeEdit = !this.activeEdit;
-          },
         },
 
         // Les listes son applé ici.
-        /* Ici j'appelle mon getAlltriptyque.*/
+        /* Ici j'appelle mon getAlltriptyque. avec API*/
+        // Created c'est a la crea de tout dans la Vue genéral 
 
-        created: function (arg) {
+        created: function () {
           axios.get(this.url + "alltriptyque").then((response) => {
             if (response.status == 200) {
               console.log(response);
@@ -460,7 +453,7 @@
                 this.getPricebais.push(response);
               }
             }),
-
+              // then c'est une function qui attand le retoure de la requête pour s’activer
             /* Ici c'est Alldome */
 
             axios.get(this.url + "alldome").then((response) => {
