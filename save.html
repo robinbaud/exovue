@@ -61,6 +61,116 @@
       </header>
       <home v-if="actualPage == 'home'"></home>
 
+      <div>
+        <h1>Formulaire</h1>
+
+        <form class="row g-3 needs-validation" novalidate>
+          <div class="col-md-4">
+            <label for="validationCustom01" class="form-label">Nom*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="validationCustom01"
+              value=""
+              required
+            />
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="validationCustom02" class="form-label">Prénom*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="validationCustom02"
+              value=""
+              required
+            />
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="validationCustomUsername" class="form-label"
+              >Email</label
+            >
+            <div class="input-group has-validation">
+              <div class="form-floating mb-3">
+                <input
+                  type="email"
+                  class="form-control"
+                  id="exampleFormControlInput1"
+                  placeholder="name@example.com"
+                />
+                <label for="floatingInput">Email address</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="validationCustom01" class="form-label"
+              >Marque de camping-car</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="validationCustom01"
+              value=""
+              required
+            />
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="validationCustom02" class="form-label"
+              >Modèle du camping-car</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="validationCustom02"
+              value=""
+              required
+            />
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="validationCustom01" class="form-label"
+              >Type du camping-car</label
+            >
+            <select aria-label="Default select example">
+              <option value="1">Intégral</option>
+              <option value="2">Capucine</option>
+              <option value="3">Profilé</option>
+              <option value="4">Fourgon</option>
+              <option value="4">Hors gabarit</option>
+            </select>
+
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+
+          <div class="form-flating">
+            <label for="phone">Veuillez saisir un numéro de téléphone:</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+              required
+            />
+          </div>
+
+          <div class="form-floating">
+            <textarea
+              class="form-control"
+              placeholder="Leave a comment here"
+              id="floatingTextarea"
+            ></textarea>
+            <label for="floatingTextarea">Comments</label>
+          </div>
+        </form>
+      </div>
+
       <!---La liste commence ici-->
       <div v-if="actualPage !== 'home'">
         <div id="ici" class="container">

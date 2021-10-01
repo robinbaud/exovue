@@ -35,6 +35,7 @@
                 v-for="button in buttonsfilter"
               >
                 <li v-if="actualPage !== button.name" class="nav-item">
+
                   <!---les buttons-->
                   <a
                     class="nav-link"
@@ -48,8 +49,8 @@
                   class="nav-link"
                   v-if="actualPage !== 'home' && actualPage !== 'formulaire'"
                   @click="choose('formulaire')"
-                  >terminer ma selection</a
-                >
+                  >terminer ma selection</a>
+                  
               </div>
             </div>
           </div>
@@ -58,28 +59,30 @@
       <home v-if="actualPage == 'home'"></home>
 
       <!---La liste commence ici-->
+
       <div v-if="actualPage !== 'home'">
         <div id="ici" class="container">
           <div class="row">
-            <div class="col-8">
-              <pare-brise
-                v-if="actualPage == 'pare-brise'"
-                :data="getAlltriptyque"
-              >
-              </pare-brise>
+          <div class="col-8">
 
-              <baie v-if="actualPage == 'baie'" :test="getPricebais"></baie>
-              <dome v-if="actualPage == 'dome'" :yolo="getAlldome"></dome>
-              <formulaire v-if="actualPage == 'formulaire'"></formulaire>
-            </div>
+            <pare-brise
+              v-if="actualPage == 'pare-brise'"
+              :data="getAlltriptyque"
+            > </pare-brise>
 
-            <!----recap--->
+            <baie v-if="actualPage == 'baie'" :test="getPricebais"></baie>
+            <dome v-if="actualPage == 'dome'" :yolo="getAlldome"></dome>
+            <formulaire v-if="actualPage == 'formulaire'"></formulaire>
+          </div>
+   
+          <!----recap--->
 
-            <div class="col-4 row recap">
+          <div class="col-4 row recap">
             <h2>recapitulatif de ma commande</h2>
             <p v-if="CampingCarModel !== '' ">
               volet triptyque de part brise = {{CampingCarModel}}
             </p>
+          
             <div class="col-12" v-for="(donnée, index) in filter">
               baie {{index + 1}} = {{donnée.longueur}} X {{donnée.hauteur}} cm
             </div>
@@ -93,12 +96,15 @@
       </div>
 
       <!-- et fini ici -->
+
     </div>
+
     <!-- <----------div app-->
 
     <!-- Vue.JS  -->
 
     <script>
+
       // Accueil //
 
       Vue.component("home", {
@@ -136,6 +142,7 @@
         </div>`,
 
         // C’est pour changer les pages home.
+
         methods: {
           choose: function (pageChoosen) {
             this.$parent.choose(pageChoosen);
@@ -145,6 +152,7 @@
         /* Les pages a affiché.  https://vuejs.org/v2/api/#parent */
 
         /*Formulaire de fin de commande*/
+        
         Vue.component("formulaire", {
           template: `<div><h1>Formulaire</h1>
 
@@ -192,19 +200,21 @@
         </div>
 
           <div class="col-md-4">
-          <label for="validationCustom01" class="form-label">Type du camping-car</label>
-          <select class="form-select" aria-label="Default select example">
-          <option v-if="this.$parent._data.CampingCarModel !== ''" selected>{{this.$parent._data.CampingCarModel}}</option>
-          <option selected>Open this select menu</option>
-          <option value="1">Intégral</option>
-          <option value="2">Capucine</option>
-          <option value="3">Profilé</option>
-          <option value="4">Fourgon</option>
-          </select>
-        <div class="valid-feedback">
-            Looks good!
+            <label for="validationCustom01" class="form-label">Type du camping-car</label>
+              <select aria-label="Default select example">
+                <option value="0">{{this.$parent._data.Selected}}</option>
+                <option value="1">Intégral</option>
+                <option value="2">Capucine</option>
+                <option value="3">Profilé</option>
+                <option value="4">Fourgon</option>
+                <option value="4">Hors gabarit</option>
+              </select>
+
+            <div class="valid-feedback">
+              Looks good!
+            </div>
           </div>
-        </div>
+
           <div class="form-flating">
           <label for="phone">Veuillez saisir un numéro de téléphone:</label>
             <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
@@ -215,11 +225,14 @@
             <label for="floatingTextarea">Comments</label>
           </div>
         </form>
+
       </div>`,
         }),
+
         // Le choix du modéles //
 
         Vue.component("pare-brise", {
+
           props: ["data"],
           template: `<div class="container">
                 <div class="row row-cols-2">
@@ -230,24 +243,30 @@
                 </div>
             </div>`,
 
-          // pour choisir le modele ICI
+          // pour choisir le modele ICI //
 
           methods: {
             voletType: function (index) {
               if (index == 0) {
                 this.$parent._data.CampingCarModel = "integral";
+                this.$parent._data.Selected = this.$parent._data.CampingCarModel;
               } else if (index == 1) {
                 this.$parent._data.CampingCarModel = "Profilé";
+                this.$parent._data.Selected = this.$parent._data.CampingCarModel;
               } else if (index == 2) {
                 this.$parent._data.CampingCarModel = "Capucine";
+                this.$parent._data.Selected = this.$parent._data.CampingCarModel;
               } else if (index == 3) {
                 this.$parent._data.CampingCarModel = "Fourgons";
+                this.$parent._data.Selected = this.$parent._data.CampingCarModel;
               } else if (index == 4) {
                 this.$parent._data.CampingCarModel = "Hors Gabarit";
+                this.$parent._data.Selected = this.$parent._data.CampingCarModel;
               }
             },
           },
         }),
+
         Vue.component("baie", {
           props: ["test"],
 
@@ -268,6 +287,7 @@
               </div>`,
 
           //ça bloque les lettres sur les inputs de la page bais.//
+
           methods: {
             isNumber: function (evt) {
               evt = evt ? evt : window.event;
@@ -282,6 +302,7 @@
                 return true;
               }
             },
+            // 
             push: function () {
               this.$parent._data.listHauteur.push({
                 hauteur: "",
@@ -291,6 +312,9 @@
             },
           },
         }),
+
+        // pages dome il es déjà dans ta pages //
+        
         Vue.component("dome", {
           props: ["yolo"],
 
@@ -320,12 +344,16 @@
             },
           },
         });
+
       //il fini ici
+
       const vue = new Vue({
         el: "#app",
 
         /* API */
+
         data: {
+          
           actualPage: "home",
           buttons: [
             {
@@ -340,23 +368,35 @@
               used: false,
               name: "dome",
             },
-            
           ],
 
           url: "https://nouvelair-preprod.rouen-webmaster.com/wp-json/nouvelair/api/",
+          // get Alltriptyque récupère les donné dans L'API pour les affiché dans le component
           getAlltriptyque: [],
+          // get Pricbais récupère les donné dans L'API pour les affiché dans le component
           getPricebais: [],
+          // get Dome récupère les donné dans L'API pour les affiché dans le component
           getAlldome: [],
+          // Counter Dome affiche combien vous prenais de dome.
           counterDome: 0,
+          //
           counterLanterneaux: 0,
+          //Le choix va pas plus haut que 1
           skyDome: false,
+          //
           returnskyDome: "",
+          //
           listHauteur: [],
-          CampingCarModel: "",
+          //
+          CampingCarModel: '',
+          //
           Buttontodelete: [],
+          //
+          Selected: '',
         },
 
         //methods change la variable qui determine quel composant s'affiche au niveau des buttons
+
         methods: {
           choose: function (pageChoosen) {
             this.actualPage = pageChoosen;
@@ -365,27 +405,35 @@
                 this.buttons[i].used = true;
               }
             }
+            // Quand je quitte une page autre que home, je veux que tout s'efface. C'est le if.
+
             if (this.actualPage == "home") {
+
               for (j = 0; j < this.buttons.length; j++) {
                 this.buttons[j].used = false;
               }
+
               for (s = 0; s < this.listHauteur.length; s++) {
                 this.listHauteur[s].hauteur = "";
                 this.listHauteur[s].longueur = "";
               }
+              
               this.listHauteur.length = 10;
-              this.CampingCarModel = "";
+              this.CampingCarModel = '';
               this.counterDome = 0;
               this.counterLanterneaux = 0;
               this.skyDome = false;
               this.returnskyDome = "";
+              this.Selected= '';
             }
 
             console.log(pageChoosen);
           },
+            //
           deletebutton: function (button) {
             button.used = true;
           },
+            //
           editmode: function () {
             this.activeEdit = !this.activeEdit;
           },
@@ -393,6 +441,7 @@
 
         // Les listes son applé ici.
         /* Ici j'appelle mon getAlltriptyque.*/
+
         created: function (arg) {
           axios.get(this.url + "alltriptyque").then((response) => {
             if (response.status == 200) {
@@ -400,15 +449,19 @@
               this.getAlltriptyque.push(response);
             }
           }),
+
             // Il faut faire le tris response avec les response.
             /*Ici c"est getPricebais*/
+
             axios.get(this.url + "pricebaie").then((response) => {
               if (response.status == 200) {
                 console.log(response);
                 this.getPricebais.push(response);
               }
             }),
+
             /* Ici c'est Alldome */
+
             axios.get(this.url + "alldome").then((response) => {
               if (response.status == 200) {
                 console.log(response);
@@ -418,6 +471,7 @@
             });
 
           //boucler sur les input pour en faire une liste
+
           for (i = 0; i < 10; i++) {
             this.listHauteur.push({
               hauteur: "",
@@ -427,6 +481,7 @@
         },
 
         //on filtre le recap des baie pour ne pas afficher les resultat null//
+
         computed: {
           filter: function () {
             return this.listHauteur.filter(
@@ -436,6 +491,7 @@
           },
 
           // le filtre du button//
+          
           buttonsfilter: function () {
             return this.buttons.filter((buttons) => buttons.used !== true);
           },
