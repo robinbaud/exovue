@@ -230,6 +230,7 @@
         Vue.component("pare-brise", {
 
           props: ["data"],
+          
           template: `<div class="container">
                 <div class="row row-cols-2">
                   <div  @click="voletType(index)" style=" width: 300px; height: 200px;background-color: white; border-radius: 30px; color: green" v-for="(volets, index) in data[0].data"  class="col">
